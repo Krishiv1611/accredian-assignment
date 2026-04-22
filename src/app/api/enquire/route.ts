@@ -1,18 +1,7 @@
 import { NextResponse } from 'next/server';
 import { ChatGroq } from '@langchain/groq';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
-import { PrismaClient } from '../../../generated/prisma';
-import { PrismaPg } from '@prisma/adapter-pg';
-import { Pool } from 'pg';
-
-// Initialize the database adapter for Prisma v7
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-
-// Reuse PrismaClient instance in dev to prevent connection limit exhaustion
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
-const prisma = globalForPrisma.prisma || new PrismaClient({ adapter });
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+import { prisma } from '@/lib/prisma';
 
 export async function POST(req: Request) {
   try {
